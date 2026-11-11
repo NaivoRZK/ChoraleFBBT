@@ -37,7 +37,7 @@ L'application centralise toutes les ressources dans un groupe unique et partagé
 
 ---
 
-## 🚀 Démarrage rapide pour le binôme
+## 🚀 Démarrage rapide :
 
 ### 1. Cloner le dépôt
 ```bash
