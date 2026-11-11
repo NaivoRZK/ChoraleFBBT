@@ -41,5 +41,5 @@ L'application centralise toutes les ressources dans un groupe unique et partagé
 
 ### 1. Cloner le dépôt
 ```bash
-git clone <URL_DU_DEPOT_GIT>
+git https://github.com/NaivoRZK/ChoraleFBBT.git
 cd ChoraleFBBT
