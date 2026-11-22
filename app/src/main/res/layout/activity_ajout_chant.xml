@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/fond" android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp" android:text="Ajouter un chant"
+                android:textColor="@color/texte" android:textSize="28sp" android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="80dp" android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView style="@style/EtiquetteChorale" android:text="N°" />
+                    <EditText
+                        android:id="@+id/etNumero"
+                        android:layout_width="match_parent" android:layout_height="56dp"
+                        android:background="@drawable/bg_champ" android:gravity="center"
+                        android:inputType="number" android:maxLength="3"
+                        android:textColor="@color/vert" android:textStyle="bold" android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp" android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView style="@style/EtiquetteChorale" android:text="TITRE" />
+                    <EditText
+                        android:id="@+id/etTitre"
+                        android:layout_width="match_parent" android:layout_height="56dp"
+                        android:background="@drawable/bg_champ" android:hint="Titre du chant"
+                        android:inputType="textCapSentences" android:paddingHorizontal="16dp"
+                        android:textColor="@color/texte" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView style="@style/EtiquetteChorale" android:layout_marginTop="20dp"
+                android:text="ÉVÉNEMENT (RECUEIL)" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                app:singleSelection="true">
+                <com.google.android.material.chip.Chip android:id="@+id/chipNoel" style="@style/Widget.MaterialComponents.Chip.Choice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Noël" android:checked="true" android:textColor="@color/chip_text" app:chipBackgroundColor="@color/chip_bg" app:chipStrokeColor="@color/bordure" app:chipStrokeWidth="1dp" app:checkedIconVisible="false" />
+                <com.google.android.material.chip.Chip android:id="@+id/chipPaques" style="@style/Widget.MaterialComponents.Chip.Choice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pâques" android:textColor="@color/chip_text" app:chipBackgroundColor="@color/chip_bg" app:chipStrokeColor="@color/bordure" app:chipStrokeWidth="1dp" app:checkedIconVisible="false" />
+                <com.google.android.material.chip.Chip android:id="@+id/chipMariage" style="@style/Widget.MaterialComponents.Chip.Choice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mariage" android:textColor="@color/chip_text" app:chipBackgroundColor="@color/chip_bg" app:chipStrokeColor="@color/bordure" app:chipStrokeWidth="1dp" app:checkedIconVisible="false" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <EditText
+                android:id="@+id/etAutreEvenement"
+                android:layout_width="match_parent" android:layout_height="56dp"
+                android:layout_marginTop="8dp" android:background="@drawable/bg_champ"
+                android:hint="Ou saisir un autre événement…"
+                android:inputType="textCapSentences" android:paddingHorizontal="16dp"
+                android:textColor="@color/texte" />
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="20dp" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPhoto"
+                    android:layout_width="0dp" android:layout_height="56dp"
+                    android:layout_marginEnd="6dp" android:layout_weight="1"
+                    android:text="Prendre une photo" android:textAllCaps="false"
+                    app:cornerRadius="28dp" app:backgroundTint="@color/vert" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGalerie"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp" android:layout_height="56dp"
+                    android:layout_marginStart="6dp" android:layout_weight="1"
+                    android:text="Galerie" android:textAllCaps="false"
+                    android:textColor="@color/vert" app:cornerRadius="28dp"
+                    app:strokeColor="@color/vert" />
+            </LinearLayout>
+
+            <TextView style="@style/EtiquetteChorale" android:layout_marginTop="20dp"
+                android:text="APERÇU DE LA PHOTO" />
+
+            <FrameLayout
+                android:layout_width="match_parent" android:layout_height="190dp"
+                android:background="@drawable/bg_pointille">
+                <TextView
+                    android:id="@+id/tvAucunePhoto"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="center" android:text="Aucune photo pour le moment"
+                    android:textColor="@color/gris" />
+                <ImageView
+                    android:id="@+id/imgApercu"
+                    android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:contentDescription="Aperçu de la photo"
+                    android:padding="2dp" android:scaleType="centerCrop"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAudio"
+                    android:layout_width="0dp" android:layout_height="52dp"
+                    android:layout_marginEnd="6dp" android:layout_weight="1"
+                    android:text="🎤 Audio complet" android:textAllCaps="false"
+                    android:textColor="@color/vert" app:cornerRadius="20dp"
+                    app:backgroundTint="@color/vert_clair" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPlayback"
+                    android:layout_width="0dp" android:layout_height="52dp"
+                    android:layout_marginStart="6dp" android:layout_weight="1"
+                    android:text="🎵 Playback" android:textAllCaps="false"
+                    android:textColor="@color/vert" app:cornerRadius="20dp"
+                    app:backgroundTint="@color/vert_clair" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:padding="16dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAnnuler"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp" android:layout_height="60dp"
+            android:layout_marginEnd="6dp" android:layout_weight="1"
+            android:text="Annuler" android:textAllCaps="false"
+            android:textColor="@color/texte" app:cornerRadius="30dp"
+            app:strokeColor="@color/bordure" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEnregistrer"
+            android:layout_width="0dp" android:layout_height="60dp"
+            android:layout_marginStart="6dp" android:layout_weight="2"
+            android:text="Enregistrer le chant" android:textAllCaps="false"
+            android:textStyle="bold" app:cornerRadius="30dp"
+            app:backgroundTint="@color/vert" />
+    </LinearLayout>
+</LinearLayout>
