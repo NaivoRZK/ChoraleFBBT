@@ -2,9 +2,11 @@ package com.example.choralefbbt.ui.login
 
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
-import android.widget.GridLayout
-import android.widget.Space
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +15,7 @@ import com.example.choralefbbt.data.AppDatabase
 import com.example.choralefbbt.data.ChoraleRepository
 import com.example.choralefbbt.databinding.ActivityLoginBinding
 import com.example.choralefbbt.ui.ajout.AjoutChantActivity
-import com.google.android.material.button.MaterialButton
+import com.example.choralefbbt.ui.parametres.ParametresActivity
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.launch
 
@@ -22,89 +24,148 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var b: ActivityLoginBinding
     private val repo by lazy { ChoraleRepository(AppDatabase.get(this)) }
     private var pin = ""
-    private val points by lazy { listOf(b.dot1, b.dot2, b.dot3, b.dot4) }
+    private val points by lazy { listOf(b.pinDot1, b.pinDot2, b.pinDot3, b.pinDot4) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(b.root)
 
-        b.tabs.addTab(b.tabs.newTab().setText("Admin"))
-        b.tabs.addTab(b.tabs.newTab().setText("Membre"))
-        b.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) { pin = ""; majPoints() }
+        initialiserActionsHaut()
+
+        b.layoutAdminFields.visibility = if (b.tabRole.selectedTabPosition == 0) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+
+        b.tabRole.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val estAdmin = (tab?.position ?: 0) == 0
+                b.layoutAdminFields.visibility = if (estAdmin) View.VISIBLE else View.GONE
+                reinitialiserPin()
+            }
+
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        construireClavier()
-        b.btnConnexion.setOnClickListener { valider() }
+        configurerSaisiePin()
+        b.btnLogin.setOnClickListener { valider() }
     }
 
-    private fun construireClavier() {
-        val touches = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "⌫")
-        touches.forEach { t ->
-            if (t.isEmpty()) {
-                b.clavier.addView(Space(this), params())
-                return@forEach
+    override fun onResume() {
+        super.onResume()
+        majIndicateurCloud()
+    }
+
+    private fun initialiserActionsHaut() {
+        majIndicateurCloud()
+
+        b.btnCloudStatus.setOnClickListener {
+            val prefs = getSharedPreferences("chorale_prefs", MODE_PRIVATE)
+            val nouveauModeCloud = !prefs.getBoolean("cloud_enabled", false)
+            prefs.edit().putBoolean("cloud_enabled", nouveauModeCloud).apply()
+            majIndicateurCloud()
+
+            val message = if (nouveauModeCloud) {
+                "Mode Cloud activé"
+            } else {
+                "Mode Hors ligne (Room local)"
             }
-            val fond = if (t == "⌫") R.color.vert_clair else android.R.color.white
-            val btn = MaterialButton(this).apply {
-                text = t
-                textSize = 22f
-                setTextColor(getColor(R.color.texte))
-                cornerRadius = dp(32)
-                insetTop = 0
-                insetBottom = 0
-                backgroundTintList = ColorStateList.valueOf(getColor(fond))
-                setOnClickListener { toucher(t) }
-            }
-            b.clavier.addView(btn, params())
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+
+        b.btnSettings.setOnClickListener {
+            startActivity(Intent(this, ParametresActivity::class.java))
         }
     }
 
-    private fun params() = GridLayout.LayoutParams(
-        GridLayout.spec(GridLayout.UNDEFINED),
-        GridLayout.spec(GridLayout.UNDEFINED, 1f)
-    ).apply {
-        width = 0
-        height = dp(64)
-        setMargins(dp(8), dp(6), dp(8), dp(6))
+    private fun majIndicateurCloud() {
+        val prefs = getSharedPreferences("chorale_prefs", MODE_PRIVATE)
+        val cloudActive = prefs.getBoolean("cloud_enabled", false)
+
+        if (cloudActive) {
+            b.btnCloudStatus.setImageResource(R.drawable.ic_cloud_done)
+            b.btnCloudStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#E6F4EA"))
+            b.btnCloudStatus.imageTintList = ColorStateList.valueOf(Color.parseColor("#1E7A46"))
+        } else {
+            b.btnCloudStatus.setImageResource(R.drawable.ic_cloud_off)
+            b.btnCloudStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
+            b.btnCloudStatus.imageTintList = ColorStateList.valueOf(Color.parseColor("#1E7A46"))
+        }
     }
 
-    private fun toucher(t: String) {
-        if (t == "⌫") pin = pin.dropLast(1)
-        else if (pin.length < 4) pin += t
+    private fun configurerSaisiePin() {
+        b.etPin.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                pin = s?.toString().orEmpty()
+                majPoints()
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun reinitialiserPin() {
+        pin = ""
+        if (b.etPin.text?.isNotEmpty() == true) {
+            b.etPin.text?.clear()
+        }
         majPoints()
     }
 
     private fun majPoints() {
         points.forEachIndexed { i, v ->
-            v.setBackgroundResource(if (i < pin.length) R.drawable.bg_dot_on else R.drawable.bg_dot_off)
+            val estRempli = i < pin.length
+            v.backgroundTintList = ColorStateList.valueOf(
+                Color.parseColor(if (estRempli) "#1E7A46" else "#DCE3DF")
+            )
         }
     }
 
     private fun valider() {
-        val admin = b.tabs.selectedTabPosition == 0
+        val admin = b.tabRole.selectedTabPosition == 0
         if (!admin) {
-            // Membre : pas de PIN. À remplacer par l'écran liste quand il existera.
             Toast.makeText(this, "Liste des chants à venir", Toast.LENGTH_SHORT).show()
             return
         }
+
+        val nom = b.etLastName.text?.toString()?.trim().orEmpty()
+        val prenom = b.etFirstName.text?.toString()?.trim().orEmpty()
+        pin = b.etPin.text?.toString()?.trim().orEmpty()
+
+        if (nom.isEmpty() || prenom.isEmpty()) {
+            Toast.makeText(this, "Veuillez saisir le nom et le prénom", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (pin.length < 4) {
+            Toast.makeText(this, "Veuillez saisir le code PIN à 4 chiffres", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         lifecycleScope.launch {
             val user = repo.connecterAdmin(pin)
-            if (user != null) {
+            if (user != null &&
+                user.lastName.equals(nom, ignoreCase = true) &&
+                user.firstName.equals(prenom, ignoreCase = true)
+            ) {
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Bienvenue ${user.firstName} ${user.lastName}",
+                    Toast.LENGTH_SHORT
+                ).show()
                 startActivity(
                     Intent(this@LoginActivity, AjoutChantActivity::class.java)
                         .putExtra("user_id", user.userId)
                 )
             } else {
-                Toast.makeText(this@LoginActivity, "Code incorrect", Toast.LENGTH_SHORT).show()
-                pin = ""
-                majPoints()
+                Toast.makeText(this@LoginActivity, "Nom, prénom ou code incorrect", Toast.LENGTH_SHORT).show()
+                reinitialiserPin()
             }
         }
     }
-
-    private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 }

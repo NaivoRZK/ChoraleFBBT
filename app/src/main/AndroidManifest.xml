@@ -19,6 +19,9 @@
         <activity
             android:name=".ui.ajout.AjoutChantActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.parametres.ParametresActivity"
+            android:exported="false" />
 
     </application>
 

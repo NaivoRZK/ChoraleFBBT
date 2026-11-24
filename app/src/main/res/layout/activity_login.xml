@@ -1,53 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@color/fond" android:fillViewport="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F8F7"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="24dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        <TextView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="24dp" android:text="Chorale FBBT"
-            android:textColor="@color/texte" android:textSize="32sp" android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" android:text="VOUS ÊTES"
-            android:textColor="@color/gris" android:textSize="12sp"
-            android:textStyle="bold" android:letterSpacing="0.1" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:tabIndicatorColor="@color/vert"
-            app:tabSelectedTextColor="@color/vert"
-            app:tabTextColor="@color/gris" />
-
+        <!-- En-tête : Chorale FBBT + boutons Nuage / Paramètres -->
         <LinearLayout
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="32dp" android:layout_marginBottom="24dp"
-            android:gravity="center" android:orientation="horizontal">
-            <View android:id="@+id/dot1" android:layout_width="16dp" android:layout_height="16dp" android:layout_margin="8dp" android:background="@drawable/bg_dot_off" />
-            <View android:id="@+id/dot2" android:layout_width="16dp" android:layout_height="16dp" android:layout_margin="8dp" android:background="@drawable/bg_dot_off" />
-            <View android:id="@+id/dot3" android:layout_width="16dp" android:layout_height="16dp" android:layout_margin="8dp" android:background="@drawable/bg_dot_off" />
-            <View android:id="@+id/dot4" android:layout_width="16dp" android:layout_height="16dp" android:layout_margin="8dp" android:background="@drawable/bg_dot_off" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chorale FBBT"
+                android:textColor="#1B221E"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnCloudStatus"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_circle_outline"
+                android:contentDescription="Statut hors ligne ou cloud"
+                android:padding="11dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_cloud_off"
+                app:tint="#1E7A46" />
+
+            <ImageButton
+                android:id="@+id/btnSettings"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/bg_circle_outline"
+                android:contentDescription="Paramètres"
+                android:padding="11dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_settings"
+                app:tint="#1E7A46" />
         </LinearLayout>
 
-        <GridLayout
-            android:id="@+id/clavier"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp" android:columnCount="3" />
+        <!-- VOUS ÊTES -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:letterSpacing="0.12"
+            android:text="VOUS ÊTES"
+            android:textColor="#626E67"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
+        <!-- Onglets Admin / Membre -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#1E7A46"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorHeight="2.5dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#1E7A46"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:tabTextColor="#626E67">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Admin" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Membre" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <!-- Champs Admin : NOM, PRÉNOM, CODE PIN -->
+        <LinearLayout
+            android:id="@+id/layoutAdminFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.1"
+                android:text="NOM"
+                android:textColor="#55615A"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etLastName"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_field"
+                android:hint="Votre nom"
+                android:inputType="textPersonName|textCapWords"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1B221E"
+                android:textColorHint="#8A948E"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:letterSpacing="0.1"
+                android:text="PRÉNOM"
+                android:textColor="#55615A"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_field"
+                android:hint="Votre prénom"
+                android:inputType="textPersonName|textCapWords"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1B221E"
+                android:textColorHint="#8A948E"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:letterSpacing="0.1"
+                android:text="CODE PIN"
+                android:textColor="#55615A"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etPin"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_field"
+                android:hint="4 chiffres"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1B221E"
+                android:textColorHint="#8A948E"
+                android:textSize="16sp" />
+
+            <!-- Conservé pour compatibilité avec votre LoginActivity.kt actuel -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <View android:id="@+id/pinDot1" android:layout_width="1dp" android:layout_height="1dp" />
+                <View android:id="@+id/pinDot2" android:layout_width="1dp" android:layout_height="1dp" />
+                <View android:id="@+id/pinDot3" android:layout_width="1dp" android:layout_height="1dp" />
+                <View android:id="@+id/pinDot4" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn1" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn2" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn3" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn4" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn5" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn6" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn7" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn8" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn9" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btn0" android:layout_width="1dp" android:layout_height="1dp" />
+                <Button android:id="@+id/btnDelete" android:layout_width="1dp" android:layout_height="1dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Bouton Se connecter -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnConnexion"
-            android:layout_width="match_parent" android:layout_height="60dp"
-            android:layout_marginTop="24dp" android:text="Se connecter"
-            android:textSize="18sp" android:textStyle="bold"
-            android:textAllCaps="false" app:cornerRadius="30dp"
-            app:backgroundTint="@color/vert" />
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="28dp"
+            android:backgroundTint="#1E7A46"
+            android:text="Se connecter"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:cornerRadius="28dp" />
+
     </LinearLayout>
 </ScrollView>
